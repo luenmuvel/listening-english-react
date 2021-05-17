@@ -1,25 +1,28 @@
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter as Router, Route } from "react-router-dom";
+import Footer from "./components/footer/footer.component";
+import Header from "./components/header/header.component";
+import Register from "./components/register/register.component";
+import Dashboard from "./components/dashboard/dashboard";
+import Sound from "./components/sound/sound";
+import Playground from "./components/playground/Playground";
+import Dictionary from "./components/dictionary/Dictionary";
+import "bootstrap/dist/css/bootstrap.css";
+import "./styles.css";
 
-function App() {
+export const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Router>
+        <Header />
+        <div className="container">
+          <Route exact path="/" component={Dashboard} />
+          <Route path="/register" component={Register} />
+          <Route path="/sound/:id" component={Sound} />
+          <Route path="/playground/:id" component={Playground} />
+          <Route path="/dictionary/:id" component={Dictionary} />
+        </div>
+        <Footer />
+      </Router>
+    </>
   );
-}
-
-export default App;
+};

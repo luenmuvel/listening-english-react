@@ -7,6 +7,8 @@ import Sound from "./components/sound/sound";
 import Playground from "./components/playground/Playground";
 import Dictionary from "./components/dictionary/Dictionary";
 import "bootstrap/dist/css/bootstrap.css";
+import "bootstrap-icons/font/bootstrap-icons.css";
+
 import "./styles.css";
 
 export const App = () => {

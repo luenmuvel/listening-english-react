@@ -6,13 +6,15 @@ import { useParams } from "react-router-dom";
 import { helper } from "./helpers/index";
 
 import styled from "styled-components";
+import Range from "./components/range/Range";
+import IniEnd from "./../dictionary/writing/components/IniEnd";
+import Title from "./components/title/Title";
+import Navigation from "./components/navigation/Navigation";
+import LangLyrics from "./components/lang-lyrics/LangLyrics";
+import Cutter from "./components/cutter/Cutter";
 
 const LyricsTrack = styled.div`
   margin: 20px 0px;
-`;
-
-const MyArea = styled.div`
-  margin: 5px 0px;
 `;
 
 const Sound = () => {
@@ -89,9 +91,7 @@ const Sound = () => {
   const pause = () => {
     if (audioState.paused) {
       const currentTime = Math.floor(sound.currentTime);
-      sound.currentTime = currentTime;
       setCurrentTime(helper.formatTime(currentTime));
-
       sound.play();
     } else {
       sound.pause();
@@ -118,6 +118,11 @@ const Sound = () => {
     sound.currentTime = minusTwo;
   };
 
+  const setInit = (time) => {
+    sound.currentTime = time;
+    setMStart(time);
+  };
+
   //**************** */
   // Los botones para marcar los tiempos para mostrar las letras
   const markStart = () => {
@@ -129,24 +134,21 @@ const Sound = () => {
     sound.pause();
     clearInterval(timer);
   };
+
   const listenTrack = () => {
     sound.currentTime = mStart;
     play();
   };
+
   const saveTrack = async () => {
-    const resp = await axios.post(
-      "http://localhost:8080/sound/update-lyrics/" + id,
-      {
-        id,
-        english,
-        spanish,
-        mStart,
-        mEnd,
-      }
-    );
+    await axios.post("http://localhost:8080/sound/update-lyrics/" + id, {
+      id,
+      english,
+      spanish,
+      mStart,
+      mEnd,
+    });
     sound.currentTime = mStart;
-    console.log(resp);
-    // console.log(totalTime);
     setMEnd(helper.formatSeconds(totalTime));
   };
 
@@ -160,47 +162,37 @@ const Sound = () => {
 
   return (
     <>
-      <h3>{trackData.title}</h3>
-      <button onClick={play}>Iniciar</button>
-      <button onClick={stop}>Detener</button>
-      <button onClick={pause}>
-        {audioState.paused ? "Continuar" : "Pausar"}
-      </button>
-      <button onClick={returnFive}>-5 seg</button>
-      <button onClick={plushFive}>+5 seg</button>
-      <button onClick={returnTwo}>-2 seg</button>
+      <Title trackData={trackData} />
+      <Navigation
+        play={play}
+        stop={stop}
+        pause={pause}
+        audioState={audioState}
+        returnFive={returnFive}
+        plushFive={plushFive}
+        returnTwo={returnTwo}
+      />
       <LyricsTrack>
-        Inglés
-        <MyArea>
-          <textarea
-            cols="40"
-            rows="3"
-            onChange={handleEnglish}
-            value={english}
-          ></textarea>
-        </MyArea>
-        Español
-        <MyArea>
-          <textarea
-            cols="40"
-            rows="3"
-            onChange={handleSpanish}
-            value={spanish}
-          ></textarea>
-        </MyArea>
-        <button onClick={markStart}>Marcar inicio</button>
-        <button onClick={markEnd}>Marcar fin</button>
-        <button onClick={listenTrack}>Escuchar</button>
-        <button onClick={saveTrack}>Guardar</button>
+        <LangLyrics handle={handleEnglish} lyrics={english} lang="Inglés" />
+        <LangLyrics handle={handleSpanish} lyrics={spanish} lang="Español" />
+
+        <Cutter
+          markStart={markStart}
+          markEnd={markEnd}
+          listenTrack={listenTrack}
+          saveTrack={saveTrack}
+        />
       </LyricsTrack>
-      <div>
-        <div>
-          <strong>{helper.formatTime(mStart)}</strong> |{" "}
-          <strong>{helper.formatTime(mEnd)}</strong>
-        </div>
-      </div>
+      <IniEnd mStart={mStart} mEnd={mEnd} />
+      <Range
+        max={totalTime}
+        setInit={setInit}
+        currentTime={currentTime}
+        sound={sound}
+      />
       <Time currentTime={currentTime} totalTime={totalTime} />
-      <pre>{trackData.lyrics}</pre>
+      {/* <pre>{trackData.lyrics}</pre> */}
+      {mStart} | {mEnd}
     </>
   );
 };

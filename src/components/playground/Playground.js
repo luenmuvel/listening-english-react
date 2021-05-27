@@ -19,6 +19,34 @@ const Wrapper = styled.div`
   margin: 20px 0;
 `;
 
+const SelectedWord = styled.p`
+  display: inline-block;
+  background: #585858;
+  padding: 3px 10px;
+  border-radius: 8px;
+  color: white;
+`;
+
+const AddDictionaryOption = styled.p`
+  display: inline-block;
+  background-color: #0062cc;
+  color: white;
+  padding: 3px 10px;
+  border-radius: 5px;
+  margin: 3px 5px 0 0;
+  cursor: pointer;
+`;
+
+const AddGrammarOption = styled.p`
+  display: inline-block;
+  background-color: #05680a;
+  color: white;
+  padding: 3px 10px;
+  border-radius: 5px;
+  margin: 3px 5px;
+  cursor: pointer;
+`;
+
 const Playground = () => {
   const { id } = useParams();
   const url = `http://localhost:8080/sound/${id}`;
@@ -35,6 +63,7 @@ const Playground = () => {
   const [userInteract, setUserInteract] = useState(false);
   const [playing, setPlaying] = useState(false);
   const [edit, setEdit] = useState(false);
+  const [selected, setSelected] = useState("");
 
   useEffect(() => {
     getAudio(url);
@@ -49,25 +78,39 @@ const Playground = () => {
       } else if (e.keyCode === 32) {
         // barra espaciadora
         if (playing) {
-          pause();
+          sound.pause();
+          setPlaying((play) => !play);
         } else {
           sound.play();
           setUserInteract(true);
-          setPlaying(true);
+          setPlaying((play) => !play);
         }
       } else if (e.keyCode === 37) {
-        minusOne();
+        minusTwo();
       } else if (e.keyCode === 39) {
-        plusOne();
+        plusTwo();
       } else if (e.keyCode === 82) {
         repeat();
+      }
+    };
+
+    const selection = () => {
+      const wordSelected = window.getSelection().toString();
+      if (wordSelected.length) {
+        setSelected(wordSelected);
+      } else {
+        setSelected("");
       }
     };
     if (!edit) {
       document.addEventListener("keydown", keyPress);
     }
+
+    document.addEventListener("mouseup", selection);
+
     return () => {
       document.removeEventListener("keydown", keyPress);
+      document.removeEventListener("mouseup", selection);
     };
   });
 
@@ -127,15 +170,14 @@ const Playground = () => {
   };
 
   const play = () => {
-    setUserInteract(true);
-    sound.currentTime = mStart;
     sound.play();
-    setPlaying(true);
+    setUserInteract(true);
+    setPlaying((play) => !play);
   };
 
   const pause = () => {
     sound.pause();
-    setPlaying(false);
+    setPlaying((play) => !play);
   };
 
   const next = (e) => {
@@ -203,12 +245,25 @@ const Playground = () => {
     sound.currentTime = mStart;
   };
 
+  // ----
+
+  const addDictionary = () => {
+    console.log("diccionario");
+  };
+
+  const addGrammar = () => {
+    console.log("gramatica");
+  };
+
   return (
     <>
       <h2>Playground</h2>
       <div>
-        <Button onClick={play}>Play</Button>
-        <Button onClick={pause}>Pausa</Button>
+        {!playing ? (
+          <Button onClick={play}>Play</Button>
+        ) : (
+          <Button onClick={pause}>Pausa</Button>
+        )}
         <Button onClick={turnLoop}>{loop ? "Quitar bucle" : "Bucle"}</Button>
         <Button onClick={previous}>Anterior</Button>
         <Button onClick={next}>Siguiente</Button>
@@ -257,6 +312,19 @@ const Playground = () => {
               Editar
             </button>
           </p>
+          {selected ? (
+            <>
+              <div>
+                <SelectedWord>{selected}</SelectedWord>
+              </div>
+              <AddDictionaryOption onClick={addDictionary}>
+                Añadir a diccionario
+              </AddDictionaryOption>
+              <AddGrammarOption onClick={addGrammar}>
+                Añadir a gramática
+              </AddGrammarOption>
+            </>
+          ) : null}
         </>
       )}
     </>

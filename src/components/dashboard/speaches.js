@@ -28,7 +28,7 @@ const Speaches = ({ sounds }) => {
               pathname: `/dictionary/${sound._id}`,
             }}
           >
-            Diccinario
+            Diccionario
           </Link>
         </li>
       ))}

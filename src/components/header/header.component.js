@@ -20,6 +20,9 @@ const Header = () => {
             <Link to="/">Dashboard</Link>
           </Item>
           <Item>
+            <Link to="/grammar">Gramática</Link>
+          </Item>
+          <Item>
             <Link to="/register">Registrar audio</Link>
           </Item>
         </Wrapper>

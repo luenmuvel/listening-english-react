@@ -50,7 +50,7 @@ const WritingPlayground = () => {
 
   useEffect(() => {
     const getWords = async () => {
-      const data = await axios.get("http://localhost:8080/dictionary/getAll");
+      const data = await axios.get("http://localhost:2500/dictionary/getAll");
       setTotal(data.data.data.length);
       addStatus(data.data.data);
     };

@@ -6,7 +6,11 @@ import axios from "axios";
 
 const Button = styled.button`
   display: inline-block;
-  margin: 0 5px;
+  margin: 5px 5px;
+
+  &::first-child {
+    margin-left: 0;
+  }
 `;
 
 const Speech = styled.div`
@@ -49,8 +53,8 @@ const AddGrammarOption = styled.p`
 
 const Playground = () => {
   const { id } = useParams();
-  const url = `http://localhost:8080/sound/${id}`;
-  const trackDataUrl = `http://localhost:8080/sound/track-data`;
+  const url = `http://localhost:2500/sound/${id}`;
+  const trackDataUrl = `http://localhost:2500/sound/track-data`;
 
   const [tracks, setTracks] = useState([]);
   const [track, setTrack] = useState({});
@@ -223,7 +227,7 @@ const Playground = () => {
 
   // Editar
   const updateTrack = async () => {
-    await axios.post("http://localhost:8080/sound/update-chunk", {
+    await axios.post("http://localhost:2500/sound/update-chunk", {
       ...track,
     });
     setEdit(false);
@@ -260,19 +264,45 @@ const Playground = () => {
       <h2>Playground</h2>
       <div>
         {!playing ? (
-          <Button onClick={play}>Play</Button>
+          <Button className="btn btn-success btn-sm" onClick={play}>
+            <i class="bi bi-play-circle"></i>
+          </Button>
         ) : (
-          <Button onClick={pause}>Pausa</Button>
+          <Button className="btn btn-warning btn-sm" onClick={pause}>
+            <i class="bi bi-pause-circle"></i>
+          </Button>
         )}
-        <Button onClick={turnLoop}>{loop ? "Quitar bucle" : "Bucle"}</Button>
-        <Button onClick={previous}>Anterior</Button>
-        <Button onClick={next}>Siguiente</Button>
-        <Button onClick={minusFive}>-5</Button>
-        <Button onClick={minusTwo}>-2</Button>
-        <Button onClick={minusOne}>-1</Button>
-        <Button onClick={plusOne}>+1</Button>
-        <Button onClick={plusTwo}>+2</Button>
-        <Button onClick={plusFive}>+5</Button>
+        <Button onClick={turnLoop} className="btn btn-dark btn-sm">
+          {loop ? (
+            <i class="bi bi-arrow-clockwise"></i>
+          ) : (
+            <i class="bi bi-arrow-counterclockwise"></i>
+          )}
+        </Button>
+        <Button onClick={previous} className="btn btn-sm btn-danger">
+          <i class="bi bi-arrow-left-circle"></i>
+        </Button>
+        <Button onClick={next} className="btn btn-sm btn-danger">
+          <i class="bi bi-arrow-right-circle"></i>
+        </Button>
+        <Button onClick={minusFive} className="btn btn-secondary btn-sm">
+          -5
+        </Button>
+        <Button onClick={minusTwo} className="btn btn-secondary btn-sm">
+          -2
+        </Button>
+        <Button onClick={minusOne} className="btn btn-secondary btn-sm">
+          -1
+        </Button>
+        <Button onClick={plusOne} className="btn btn-secondary btn-sm">
+          +1
+        </Button>
+        <Button onClick={plusTwo} className="btn btn-secondary btn-sm">
+          +2
+        </Button>
+        <Button onClick={plusFive} className="btn btn-secondary btn-sm">
+          +5
+        </Button>
       </div>
       {edit ? (
         <>
@@ -284,8 +314,10 @@ const Playground = () => {
                 value={track.eng}
                 cols="60"
                 rows="5"
+                className="form-control"
               ></textarea>
             </div>
+            &nbsp;
             <div>
               <textarea
                 onChange={editTrack}
@@ -293,10 +325,15 @@ const Playground = () => {
                 value={track.spa}
                 cols="60"
                 rows="5"
+                className="form-control"
               ></textarea>
             </div>
-            <button onClick={updateTrack}>Actualizar</button>
-            <button onClick={cancelUpdating}>Cancelar</button>
+            <Button onClick={updateTrack} className="btn btn-sm btn-info">
+              <i class="bi bi-clipboard-check"></i> Actualizar
+            </Button>
+            <Button onClick={cancelUpdating} className="btn btn-sm btn-danger">
+              <i class="bi bi-clipboard-x"></i> Cancelar
+            </Button>
           </Wrapper>
         </>
       ) : (
@@ -308,8 +345,9 @@ const Playground = () => {
               onClick={() => {
                 setEdit(true);
               }}
+              className="btn btn-dark btn-sm"
             >
-              Editar
+              <i class="bi bi-pencil"></i>
             </button>
           </p>
           {selected ? (

@@ -21,7 +21,7 @@ const RegisterWord = () => {
 
   const guardar = async () => {
     setSaving(true);
-    await axios.post("http://localhost:8080/dictionary/save-word", wordsObj);
+    await axios.post("http://localhost:2500/dictionary/save-word", wordsObj);
     setSaving(false);
     setWordsObj({
       infinitive: "",

@@ -32,12 +32,22 @@ const Sound = () => {
   const [english, setEnglish] = useState("");
   const [spanish, setSpanish] = useState("");
 
-  const streamUrl = `http://localhost:8080/sound/${id}`;
-  const trackDataUrl = `http://localhost:8080/sound/track-data`;
+  const [cutStart, setCutStart] = useState(false);
+
+  const streamUrl = `http://localhost:2500/sound/${id}`;
+  const trackDataUrl = `http://localhost:2500/sound/track-data`;
 
   useEffect(() => {
     getAudio(streamUrl);
   }, []);
+
+  useEffect(() => {
+    console.log(cutStart);
+    // if (cutStart) {
+    //   sound.currentTime = sound.currentTime - 2;
+    //   sound.play();
+    // }
+  }, [cutStart]);
 
   const stop = () => {
     clearInterval(timer);
@@ -126,11 +136,13 @@ const Sound = () => {
   //**************** */
   // Los botones para marcar los tiempos para mostrar las letras
   const markStart = () => {
+    setCutStart(true);
     setMStart(sound.currentTime);
   };
 
   const markEnd = () => {
     setMEnd(sound.currentTime);
+    setCutStart(false);
     sound.pause();
     clearInterval(timer);
   };
@@ -141,7 +153,7 @@ const Sound = () => {
   };
 
   const saveTrack = async () => {
-    await axios.post("http://localhost:8080/sound/update-lyrics/" + id, {
+    await axios.post("http://localhost:2500/sound/update-lyrics/" + id, {
       id,
       english,
       spanish,
@@ -149,6 +161,7 @@ const Sound = () => {
       mEnd,
     });
     sound.currentTime = mStart;
+    setMStart(mEnd);
     setMEnd(helper.formatSeconds(totalTime));
   };
 

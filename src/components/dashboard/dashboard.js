@@ -5,18 +5,19 @@ import Speaches from "./speaches";
 const Dashboard = () => {
   const [sounds, setSounds] = useState([]);
   useEffect(() => {
-    const getData = async () => {
-      const { data } = await axios.get("http://localhost:8080/sound");
-      const { sounds } = data;
-      setSounds(sounds);
-    };
     getData();
   }, []);
 
+  const getData = async () => {
+    const { data } = await axios.get("http://localhost:2500/sound");
+    const { sounds } = data;
+    setSounds(sounds);
+  };
+
   return (
     <>
-      <h1>Listado de discursos</h1>
-      <Speaches sounds={sounds} />
+      <h1>Canciones / Discursos</h1>
+      <Speaches sounds={sounds} getData={getData} />
     </>
   );
 };

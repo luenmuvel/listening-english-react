@@ -15,7 +15,7 @@ const Register = () => {
       title,
       lyrics,
     };
-    axios.post("http://localhost:8080/save", data).then((resp) => {
+    axios.post("http://localhost:2500/save", data).then((resp) => {
       setSaving(false);
       console.log(resp);
     });
@@ -47,6 +47,7 @@ const Register = () => {
           className="form-control"
           value={url}
           onChange={handleUrl}
+          autoComplete="off"
         />
       </div>
 
@@ -61,6 +62,7 @@ const Register = () => {
           className="form-control"
           value={title}
           onChange={handleTitle}
+          autoComplete="off"
         />
       </div>
 
@@ -75,6 +77,7 @@ const Register = () => {
           value={lyrics}
           onChange={handleLyrics}
           rows="10"
+          autoComplete="off"
         ></textarea>
       </div>
 
